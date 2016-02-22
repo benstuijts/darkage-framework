@@ -1,0 +1,11 @@
+{
+  "app": {
+    "name": "Darkage Framework With Express, React JS, Passport JS",
+    "version": "1.0.0",
+    "author": "Ben Stuijts 2016 | benstuijts@gmail.com",
+    "production": "false"
+  },
+  "database": {
+    "name": "mongoDb"
+  }
+}

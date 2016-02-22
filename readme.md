@@ -27,7 +27,7 @@ De voglende zaken zijn opgenomen in dit framework:
     	test_routes.js
 
     /socket.io.server
-    
+
     gameserver.js
 
 /public
@@ -36,12 +36,12 @@ De voglende zaken zijn opgenomen in dit framework:
     /views
 
     darkage.min.js              Dit is de gebundelde js file na compiling door Webpack
-    
+
 /client
     /isometricEngine
     /socket.io.client
     /userinterface              based on React JS
-    
+
     entry.js                    Entrypoint van Webpack!!!
 
 ### Directory structuur DEPLOYMENT
@@ -69,8 +69,13 @@ De voglende zaken zijn opgenomen in dit framework:
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.1",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "jsonfile": "^2.2.3",
+    "mongoose": "^4.4.4",
+    "passport": "^0.3.2",
     "webpack": "^1.12.13"
   }
 }
@@ -84,7 +89,7 @@ var webpack = require('webpack');
 
 module.exports = {
 	context: __dirname + "",
-	devtools: debug ? "inline-sourcemap" : null, 
+	devtools: debug ? "inline-sourcemap" : null,
 	entry: __dirname + "/client/entry.js",
 	output: {
 		path: __dirname + "/public_html",
@@ -197,7 +202,7 @@ $ karma start
 ### Docker
 Dillinger is very easy to install and deploy in a Docker container.
 
-By default, the Docker will expose port 80, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image. 
+By default, the Docker will expose port 80, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image.
 
 ```sh
 cd dillinger
@@ -257,4 +262,3 @@ MIT
    [PlGh]:  <https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md>
    [PlGd]: <https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md>
    [PlOd]: <https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md>
-

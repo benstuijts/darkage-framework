@@ -46,25 +46,12 @@
 <body>
 	<div class="container">
 		<% include ./partials/breadcrumb %>
-		<h1>All Test routes!</h1>
-			<ul class="list-group">
-				<% for(var i=0; i<routes.length; i++) { %>
-				<li class="list-group-item">
-					<a href='./<%= routes[i] %>'>
-						<%= routes[i] %>
-					</a>
-				</li>
-				<% } %>
-			</ul>
+    <form method="post" action="/test/config" enctype="application/json">
 
-			<form enctype='application/json' method="post" action="/test/home">
-  <input name='pet[species]' value='Dahut'>
-  <input name='pet[name]' value='Hypatia'>
-  <input name='kids[1]' value='Thelma'>
-  <input name='kids[0]' value='Ashley'>
-	<input type="submit" value="submit">'>
-</form>
+    <%- config_form %>
 
+    <input type="submit" class="btn btn-primary" value="Save Configuration">
+    </form>
 	</div>
 
 </body>

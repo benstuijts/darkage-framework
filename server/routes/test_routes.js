@@ -1,20 +1,7 @@
-var config = {
-
-  "app": {
-    "name"    : "darkage",
-    "version" : "1.0.0",
-    "author"  : "Ben Stuijts 2016"
-  },
-
-  "database" : {
-    "name"    : "mongoDb"
-  }
-
-};
-
-var fs          = require('fs');
-var express     = require('express');
-var router        = express.Router();
+const express     = require('express');
+const router      = express.Router();
+const jsonfile    = require('jsonfile')
+const config  = require('../modules/config-magic/config-magic.js').load('./server/config/config.json');
 
 var routes = [
   "worldmap",
@@ -46,82 +33,24 @@ router.get('/worldmap', function(req, res){
 });
 
 router.get('/config', function(req, res){
-  var html = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">';
+  res.render('test/config',{
+    title: "Config",
+    description: "",
+    breadcrumb: ["home","config"],
+    config_form: config.jsonToHtmlForm()
+  });
+});
 
-      html+= "<h1>test/config</h1>";
-      html+= '<form method="post" action="/test/config">';
-  for(option in config) {
-    html += "<h2>" + option + "</h2>";
-    console.dir(option);
+router.post('/config',function(req, res){
+  const body = req.body;
 
-    for(property in config[option]) {
-      switch(typeof property) {
-        case "string":
-          html += "<label>"+property+"<label>";
-          html += '<input type="text" value="'+config[option][property]+'" name="'+option+'.'+property+'">';
-          html += '<br>';
-        break;
-        case "number":
-        break;
-      }
-    }
-  }
-  html += '<button type="submit">Save configuration</button>';
-  html += '</form>';
-  res.send(html);
+  config.formToJson(body, function(conf) {
+    jsonfile.writeFile('./server/config/config.json', conf, {spaces: 2}, function (err) {
+      console.error(err);
+      if(!err) console.log('config succesfully updated');
+      res.send('Config was saved. Please return to the homepage ( <a href="./home">Home<a> ) ');
+    });
+  });
 });
 
 module.exports = router;
-
-/*
-module.exports = function(app) {
-  console.log('test routes loaded...');
-
-
-
-  app.get('/test/config', function(req, res){
-    var html = "<h1>test/config</h1>";
-        html+= '<form method="post" action="/test/config">';
-    for(option in config) {
-      html += "<h2>" + option + "</h2>";
-      console.dir(option);
-
-      for(property in config[option]) {
-        switch(typeof property) {
-          case "string":
-            html += "<label>"+property+"<label>";
-            html += '<input type="text" value="'+config[option][property]+'" name="'+option+'.'+property+'">';
-            html += '<br>';
-          break;
-          case "number":
-          break;
-        }
-      }
-    }
-    html += '<button type="submit">Save configuration</button>';
-    html += '</form>';
-    res.send(html);
-  });
-
-  app.post('/test/config', function(req,res){
-    console.log('post received...');
-    const body = req.body;
-    console.log(body);
-
-    var outputFilename = './config.json';
-
-    // werkt wel, echter in de body is niet de indeling van de config file aangehouden...
-
-    fs.writeFile(outputFilename, JSON.stringify(body, null, 4), function(err) {
-      if(err) {
-        console.log(err);
-      } else {
-        console.log("JSON saved to " + outputFilename);
-      }
-});
-
-  });
-
-
-};
-*/

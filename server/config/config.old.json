@@ -1,0 +1,26 @@
+{
+
+  "app": {
+    "name"    : "darkage",
+    "version" : "1.0.0",
+    "author"  : "Ben Stuijts 2016"
+  },
+
+  "database" : {
+    "name"    : "mongoDb"
+  },
+
+  "ingewikkeld" : {
+    "level 1" : {
+      "moeilijkheidsgraad" : "makkelijk"
+    },
+    "level 2" : {
+      "moeilijkheidsgraad" : "medium"
+    },
+    "level 3" : {
+      "moeilijkheidsgraad" : "heel moeilijk"
+    }
+
+  }
+
+}
