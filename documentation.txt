@@ -1,0 +1,49 @@
+documentation.txt
+
+---------------------------------------
+    Directory structuur DEVELOPMENT
+---------------------------------------
+
+/
+    documentation.txt
+    webpack.config.js
+    package.json
+
+/node_modules
+
+/server
+    /models
+    /routes
+    	game_routes.js
+    	admin_routes.js
+    	test_routes.js
+
+    /socket.io.server
+    
+    gameserver.js
+
+/public
+    /css
+    /images
+    /views
+
+    darkage.min.js              Dit is de gebundelde js file na compiling door Webpack
+    
+/client
+    /isometricEngine
+    /socket.io.client
+    /userinterface              based on React JS
+    
+    entry.js                    Entrypoint van Webpack!!!
+
+---------------------------------------
+    Directory structuur DEPLOYMENT
+---------------------------------------
+
+/
+	package.json
+
+/server
+
+/public
+

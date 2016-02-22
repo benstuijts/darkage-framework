@@ -1,0 +1,6 @@
+{
+    "app.name": "darkage",
+    "app.version": "1.0.0",
+    "app.author": "Ben Stuijts 2016",
+    "database.name": "mongoDb"
+}

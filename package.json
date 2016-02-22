@@ -1,0 +1,18 @@
+{
+  "name": "darkage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gameserver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./server/gameserver.js"
+  },
+  "author": "Ben Stuijts",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "webpack": "^1.12.13"
+  }
+}
