@@ -21,6 +21,8 @@ var routes = [
   "config"
 ];
 
+console.log('# test_routes loaded');
+
 router.get('/',function(req,res){
   res.redirect('test/home');
 });
