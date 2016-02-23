@@ -1,6 +1,14 @@
 /* ./server/gameserver.js
-https://github.com/benstuijts
-MAC SUDO F 2014
+
+
+  To Do list
+--------------------------------------------------------
+[X]  MongoDB on same server (localhost)
+[]  Spin up DarkAge droplet
+[]  Implement Flightplan
+[]  buy https: certificate
+[]  Spin up DarkAgedroplet https: certificate
+
 */
 
 'use strict';
@@ -8,7 +16,6 @@ MAC SUDO F 2014
 /* Dependencies */
   const http        = require('http');
   const express     = require('express');
-
   const app         = express();
   const server      = http.createServer(app);
 
@@ -19,11 +26,12 @@ MAC SUDO F 2014
   const passport    = require('passport');
 
 /* Configuration */
-  var configDb = require('./config/database.js');
+  const configDb = require('./config/database.js');
 
 /* Database */
-  mongoose.connect(configDb.url, function(){
-      console.log('# Connected to database.');
+  mongoose.connect(configDb.localhost.url, function(err){
+      if(err) {console.log('! NOT Connected to database');}
+      console.log('# Connected to database: ' + configDb.localhost.name);
   });
   // Make our db accessible to our router
   app.use(function(req,res,next){

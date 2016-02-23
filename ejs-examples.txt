@@ -1,0 +1,28 @@
+Creating Partial Views
+
+So far we have created a single view using some dynamic data and rendered the output. Now we will try to create some Nested Views. i.e. Partial Views.
+
+Replace contents of your index.ejs file with this,
+<html>
+<head>
+<% include('header.ejs') %>
+</head>
+<body>
+<% include('body.ejs') %>
+</body>
+</html>
+
+Looping Over Data
+To loop over our data, we will use
+
+.forEach. Let’s add this to our view file:
+
+<!-- views/pages/index.ejs -->
+...
+<h2>Loop</h2>
+<ul>
+    <% drinks.forEach(function(drink) { %>
+        <li><%= drink.name %> - <%= drink.drunkness %></li>
+    <% }); %>
+</ul>
+...
