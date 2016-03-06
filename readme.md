@@ -1,12 +1,12 @@
 # Darkage Framework
 
 ### Inhoud
-De voglende zaken zijn opgenomen in dit framework:
+De volgende zaken zijn opgenomen in dit framework:
 
 * Express JS
 * EJS
 * Webpack
-* React JS
+* React JS -> Flux
 * Passport JS
 * Socket.io
 

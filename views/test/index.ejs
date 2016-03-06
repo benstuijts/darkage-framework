@@ -24,7 +24,7 @@
         <meta property="og:description"
               content="">
         <!-- Open graph ends -->
-	<link rel="stylesheet" href="style.css">
+
 
         <!-- Google's analytics -->
         <script>
@@ -41,12 +41,15 @@
 
 				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
+				<link rel="stylesheet" href="/css/darkage.css">
+
 </head>
 
 <body>
 	<div class="container">
 		<% include ./partials/breadcrumb %>
-		<h1>All Test routes!</h1>
+		<h1>All Test routes</h1>
+		<h2>Let us know...</h2>
 			<ul class="list-group">
 				<% for(var i=0; i<routes.length; i++) { %>
 				<li class="list-group-item">
@@ -58,14 +61,17 @@
 			</ul>
 
 			<form enctype='application/json' method="post" action="/test/home">
-  <input name='pet[species]' value='Dahut'>
-  <input name='pet[name]' value='Hypatia'>
-  <input name='kids[1]' value='Thelma'>
-  <input name='kids[0]' value='Ashley'>
-	<input type="submit" value="submit">'>
-</form>
+			  <input name='pet[species]' value='Dahut'>
+			  <input name='pet[name]' value='Hypatia'>
+			  <input name='kids[1]' value='Thelma'>
+			  <input name='kids[0]' value='Ashley'>
+				<input type="submit" value="submit">'>
+			</form>
+			<h2>start react component</h2>
+			<div id="app"></div>
 
 	</div>
 
+	<script src="/darkage.min.js"></script>
 </body>
 </html>

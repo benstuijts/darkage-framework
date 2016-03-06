@@ -19,7 +19,7 @@ documentation.txt
     	test_routes.js
 
     /socket.io.server
-    
+
     gameserver.js
 
 /public
@@ -28,12 +28,12 @@ documentation.txt
     /views
 
     darkage.min.js              Dit is de gebundelde js file na compiling door Webpack
-    
+
 /client
     /isometricEngine
     /socket.io.client
     /userinterface              based on React JS
-    
+
     entry.js                    Entrypoint van Webpack!!!
 
 ---------------------------------------
@@ -47,3 +47,8 @@ documentation.txt
 
 /public
 
+---------------------------------------
+    User Interface React Components
+---------------------------------------
+
+window

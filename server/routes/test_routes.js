@@ -1,11 +1,12 @@
 const express     = require('express');
 const router      = express.Router();
-const jsonfile    = require('jsonfile')
+const jsonfile    = require('jsonfile');
 const config  = require('../modules/config-magic/config-magic.js').load('./server/config/config.json');
 
 var routes = [
   "worldmap",
-  "config"
+  "config",
+  "react"
 ];
 
 console.log('# test_routes loaded');
@@ -20,6 +21,12 @@ router.get('/home', function(req,res){
     description: "",
     routes: routes,
     breadcrumb: ["home"]
+  });
+});
+
+router.get('/react', function(req, res) {
+  res.render('test/react', {
+    breadcrumb: ["home","react"]
   });
 });
 

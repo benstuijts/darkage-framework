@@ -4,6 +4,7 @@
   To Do list
 --------------------------------------------------------
 [X]  MongoDB on same server (localhost)
+[]  Use React (Flux) with Node JS
 []  Spin up DarkAge droplet
 []  Implement Flightplan
 []  buy https: certificate
@@ -39,22 +40,23 @@
       next();
   });
 
+/* View Engine */
+  app.set('views', './views');
+  app.set('view engine', 'ejs');
+
 /* Middleware */
   app.use(cookieParser());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(session({ secret: 'any string', saveUninitialized: true, resave: true, cookie: { maxAge: 120000 }}));
-  app.use(express.static(__dirname + '/public_html'));
+  app.use(express.static('./public_html'));
 
 server.listen(3000,function() {
-  console.log('server is running...');
+  console.log(Date.now() + ' | server is running...');
 });
-
-/* View Engine */
-app.set('view engine', 'ejs');
-app.set('views', './public_html/views');
 
 /* Routes */
 app.use('/test', require('./routes/test_routes'));
+app.use('/auth', require('./routes/auth_routes'));
 require('./routes/game_routes')(app);
 require('./routes/admin_routes')(app);
