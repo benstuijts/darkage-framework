@@ -3,10 +3,12 @@ import ListGroupItem from './ListGroupItem';
 
 class ListGroup extends React.Component {
   render() {
+
     return (
       <ul class="list-group">
-        { this.props.items.map((item, index)=>{
-          return <ListGroupItem item={item} key={index}/>
+        { this.props.items.map((item)=>{
+          
+          return <ListGroupItem item={item} key={item.id}/>
         })
         }
       </ul>

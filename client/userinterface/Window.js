@@ -1,7 +1,45 @@
 import React from 'react';
 import ListGroup from './ListGroup';
 
+import InventoryStore from '../stores/InventoryStore';
+import * as InventoryActions from '../actions/InventoryActions';
+
 class Window extends React.Component {
+  constructor() {
+    super();
+    this.getInventory = this.getInventory.bind(this);
+    this.state = {
+      inventory: InventoryStore.getAll()
+    }
+  }
+
+  componentWillMount() {
+    // eventlisteners stores
+    InventoryStore.on("change", this.getInventory );
+  }
+
+  componentWillUnmount() {
+    // unbind eventlisteners stores
+    InventoryStore.removeListener("change", this.getInventory );
+  }
+
+  getInventory() {
+    this.setState({
+      inventory: InventoryStore.getAll()
+    });
+  }
+
+  createInventoryItem() {
+    console.log('button clicked');
+    InventoryActions.createInventoryItem({
+      id: Date.now(),
+      name: 'inventory item',
+      hoeveelheid: Math.round(Math.random()*100),
+      max: Math.round(Math.random()*100),
+
+    });
+  }
+
   render() {
     return (
       <div class="panel panel-default">
@@ -10,8 +48,11 @@ class Window extends React.Component {
         </div>
         <div class="panel-body">
           Panel content
-          
-          <ListGroup items={this.props.items}/>
+
+          <ListGroup items={this.state.inventory}/>
+          <div class="btn-group">
+            <button onClick={this.createInventoryItem.bind(this)} class="btn btn-primary">Add one</button>
+          </div>
 
           <table class="table">
             <tbody>
@@ -21,7 +62,7 @@ class Window extends React.Component {
           </table>
         </div>
 
-        <ListGroup items={this.props.items}/>
+        <ListGroup items={this.state.inventory}/>
 
         <div class="panel-footer">
           Panel footer
