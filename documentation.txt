@@ -52,3 +52,10 @@ documentation.txt
 ---------------------------------------
 
 window
+
+---------------------------------------
+    Handige links
+---------------------------------------
+
+CSS sprite sheet:
+http://wearekiss.com/spritepad

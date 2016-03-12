@@ -48,6 +48,8 @@ class InventoryStore extends EventEmitter {
 
   deleteInventoryItem(id) {
     console.log('InventoryStore: delete inventory item' , id);
+    
+    this.emit("change");
   }
 
   getAll() {

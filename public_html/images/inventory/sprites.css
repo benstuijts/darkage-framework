@@ -1,21 +1,5 @@
-body {
-  background: #bbb;
-}
-
-.inventoryitem {
-  position: relative;
-}
-
-.inventoryitem > .badge {
-  position: absolute;
-  right: -5px;
-  bottom: -5px;
-}
-
-/* Sprite Sheet Inventory */
 .aambeeld, .appelboomzaad, .appelcider, .bijbel, .bijenwas, .blaasbalg, .boek, .bot, .brood, .diamanten, .druiven, .goud, .hooi, .hout, .houtskool, .ijzer, .klei, .kruiden, .metselstenen, .planken, .spijkers, .steen, .touw{
-  display: inline-block;
-  background: url(../images/inventory/sprites.png) no-repeat;
+	background: url(sprites.png) no-repeat;
 }
 
 .aambeeld{
@@ -155,3 +139,4 @@ body {
 	width: 48px;
 	height: 48px;
 }
+
