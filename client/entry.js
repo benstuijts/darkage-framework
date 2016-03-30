@@ -1,6 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Window from './userinterface/Window';
+import DialogBox from './userinterface/DialogBox';
+import Gebouwen from './userinterface/gebouwen/Gebouwen';
+import Inventory from './userinterface/inventory/Inventory';
+
+import Settings from './userinterface/Settings/Settings';
+
 
 console.log('entry point loaded as darkage.min.js __dirname = ' + __dirname);
 
@@ -19,4 +25,7 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+//ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<Settings />, document.getElementById('settings'));
+ReactDOM.render(<Gebouwen />, document.getElementById('gebouwen'));
+ReactDOM.render(<Inventory/>, document.getElementById('inventory'));
