@@ -2,6 +2,50 @@ body {
   background: #bbb;
 }
 
+.window-2-640-476 {
+	background-color: transparent;
+	background-image: url('../images/userinterface/Window_2_640_476.png');
+}
+.InputText {
+	width: 100%;
+	height: 94px;
+	background-color: transparent;
+	background-image: url('../images/userinterface/Input.png');
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding: 30px 10%;
+}
+.InputText > input {
+	background: transparent;
+	font-size: 18px;
+	width: 100%;
+	outline: none;
+	border: none;
+}
+.DialogBox {
+	position: relative;
+	box-sizing: border-box;
+	width: 640px;
+	height: 476px;
+	padding: 30px 50px;
+	color: DeepSkyBlue ;
+	text-shadow: 1px 1px black;
+	background-size: 100% 100%;
+}
+
+.DialogBox-header {
+	position: absolute;
+	width: 50%;
+	left: 25%;
+	text-align: center;
+	
+	top: -20px;
+	color: gold;
+	text-shadow: 1px 1px 1px black;
+	
+	background: -webkit-linear-gradient(top, transparent 30%, rgba(0,0,7,0.5) 59%, transparent 90%);
+}
+
 .inventoryitem {
   position: relative;
 }

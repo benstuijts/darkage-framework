@@ -1,20 +1,19 @@
 import React from 'react';
+import Header from './DialogBox/Header';
 
 class DialogBox extends React.Component {
 
     render() {
+        
         return (
         
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h2 class="panel-title"><i class={this.props.icon}></i> {this.props.title}</h2>
-                </div>
+            <div class="DialogBox window-2-640-476">
+                <Header title={ this.props.title } icon={ this.props.icon }/>
+                
                 <div class="panel-body">
                     {this.props.children}
                 </div>
-                <div class="panel-footer">
-                Panel footer
-                </div>
+                
             </div>
         );    
     }
