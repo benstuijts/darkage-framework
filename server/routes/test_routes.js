@@ -1,7 +1,10 @@
+'use strict';
 const express     = require('express');
 const router      = express.Router();
 const jsonfile    = require('jsonfile');
 const config  = require('../modules/config-magic/config-magic.js').load('./server/config/config.json');
+
+const Canvas = require('../models/Canvas');
 
 var routes = [
   "worldmap",
@@ -16,7 +19,12 @@ console.log('# test_routes loaded');
 
 io.on('connection', function(socket) { 
     console.log('someone connected... ' + socket.id);
-    
+  
+  var worldmap = Canvas();
+
+  console.log(worldmap);
+  
+      
 });
 
 router.get('/',function(req,res){

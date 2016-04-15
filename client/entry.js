@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Window from './userinterface/Window';
@@ -30,3 +31,5 @@ class App extends React.Component {
 ReactDOM.render(<Settings />, document.getElementById('settings'));
 ReactDOM.render(<Gebouwen />, document.getElementById('gebouwen'));
 ReactDOM.render(<Inventory/>, document.getElementById('inventory'));
+*/
+

@@ -1,8 +1,12 @@
-module.exports = function(app) {
+'use strict';
+const express     = require('express');
+const router      = express.Router();
+module.exports = function(io) {
   console.log('# game_routes loaded');
 
-  app.get('/', function(req, res){
+  router.get('/', function(req, res){
     res.send('<h1>Hello Darkage Framework!</h1>');
   });
-
+  
+  return router;
 };

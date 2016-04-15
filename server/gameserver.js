@@ -71,10 +71,9 @@ app.get('/', function(req, res){
 /* Routes */
 app.use('/test', require('./routes/test_routes')(io));
 app.use('/auth', require('./routes/auth_routes'));
+app.use('/game', require('./routes/game_routes')(io));
+app.use('/admin', require('./routes/admin_routes')(io));
 
-//app.use('/admin', require('./routes/admin_routes')(io));
 
-require('./routes/game_routes')(app);
-require('./routes/admin_routes')(app);
 
 
