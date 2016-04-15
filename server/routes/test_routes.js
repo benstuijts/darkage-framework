@@ -6,10 +6,18 @@ const config  = require('../modules/config-magic/config-magic.js').load('./serve
 var routes = [
   "worldmap",
   "config",
-  "react"
+  "react",
+  "game",
 ];
 
+module.exports = function(io) {
+
 console.log('# test_routes loaded');
+
+io.on('connection', function(socket) { 
+    console.log('someone connected... ' + socket.id);
+    
+});
 
 router.get('/',function(req,res){
   res.redirect('test/home');
@@ -48,6 +56,14 @@ router.get('/config', function(req, res){
   });
 });
 
+router.get('/game', function(req,res){
+  res.render('test/game',{
+    title: "Game",
+    description: "",
+    breadcrumb: ["home","game"],
+  });  
+});
+
 router.post('/config',function(req, res){
   const body = req.body;
 
@@ -60,4 +76,5 @@ router.post('/config',function(req, res){
   });
 });
 
-module.exports = router;
+return router;
+}

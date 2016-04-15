@@ -8,6 +8,7 @@ import Inventory from './userinterface/inventory/Inventory';
 import Settings from './userinterface/Settings/Settings';
 
 
+
 console.log('entry point loaded as darkage.min.js __dirname = ' + __dirname);
 
 const message = document.getElementById('message');

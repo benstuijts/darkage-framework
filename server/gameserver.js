@@ -15,11 +15,12 @@
 'use strict';
 
 /* Dependencies */
-  const http        = require('http');
+
   const express     = require('express');
   const app         = express();
-  const server      = http.createServer(app);
-  
+  const http        = require('http').Server(app);
+  const io          = require('socket.io')(http);
+
   const port        = process.env.PORT || 8080;
   const host        = process.env.IP;
 
@@ -54,12 +55,26 @@
   app.use(session({ secret: 'any string', saveUninitialized: true, resave: true, cookie: { maxAge: 120000 }}));
   app.use(express.static('./public_html'));
 
-server.listen(port,function() {
+http.listen(port,function() {
   console.log(Date.now() + ' | server is running...');
 });
 
+/* Socket.io server */
+app.get('/', function(req, res){
+  res.render('test/game',{
+    title: "Game",
+    description: "",
+    breadcrumb: ["home","game"],
+  });  
+})
+
 /* Routes */
-app.use('/test', require('./routes/test_routes'));
+app.use('/test', require('./routes/test_routes')(io));
 app.use('/auth', require('./routes/auth_routes'));
+
+//app.use('/admin', require('./routes/admin_routes')(io));
+
 require('./routes/game_routes')(app);
 require('./routes/admin_routes')(app);
+
+
