@@ -1,4 +1,7 @@
 'use strict';
+const jsonfile    = require('jsonfile');
+const colors = require('colors');
+
 const Entity = require('./Entity');
 
 const Enemy = function(name, type, id) {
@@ -24,6 +27,20 @@ const Enemy = function(name, type, id) {
     /* Method count */
     enemy.count = function() {
         return Object.keys(Enemy.list).length;
+    };
+    
+    /* Method writeToJSONFile */
+    enemy.writeToJSONFile = function(location) {
+        if(!location || location == '') { 
+            console.log(' ERROR: Specify location and filename: ./var_dump/enemy.json '.inverse.red);  return false;
+        }
+        jsonfile.writeFile(location, this, {spaces: 2}, function (error) {
+            if(error) { 
+                console.log('Specify location and filename: ./var_dump/enemy.json | '.red + error.inverse);
+            } else {
+                console.log(' json object was written to '.inverse.green + location.inverse);
+            }
+        });
     };
     
     Enemy.list[index] = enemy;

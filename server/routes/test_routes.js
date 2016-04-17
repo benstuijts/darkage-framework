@@ -29,7 +29,10 @@ enemy.push(enemy[6].copy());
 console.log('Entities: ' + player.countAllEntities());
 console.log('Spelers: ' + Player.count());
 console.log('Enemies: ' + Enemy.count());
-Player.showListInConsole();
+
+
+
+
 io.on('connection', function(socket) { 
     console.log('someone connected... ' + socket.id);
   

@@ -5,13 +5,14 @@
   "main": "gameserver.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./server/gameserver.js",
+    "start": "nodemon --ignore 'var_dump/*' ./server/gameserver.js",
     "webpack": "webpack --watch"
   },
   "author": "Ben Stuijts",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "colors": "^1.1.2",
     "cookie-parser": "^1.4.1",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
