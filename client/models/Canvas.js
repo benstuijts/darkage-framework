@@ -6,7 +6,7 @@ const Canvas = function() {
     
     canvas.resize = function() {
         
-    }
+    };
     return canvas;
 };
 

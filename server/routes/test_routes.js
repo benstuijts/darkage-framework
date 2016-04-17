@@ -4,7 +4,8 @@ const router      = express.Router();
 const jsonfile    = require('jsonfile');
 const config  = require('../modules/config-magic/config-magic.js').load('./server/config/config.json');
 
-const Canvas = require('../models/Canvas');
+const Player = require('../models/Player');
+const Enemy = require('../models/Enemy');
 
 var routes = [
   "worldmap",
@@ -17,12 +18,22 @@ module.exports = function(io) {
 
 console.log('# test_routes loaded');
 
+const player = Player("Ben", "Speler", "mongodb_id");
+const otherplayer = Player("Pepijn", "Speler", "mongodb_id");
+const enemy = Enemy.createMultiple(12,"Struikrover");
+enemy[3].destroy();
+enemy.push(enemy[1].copy());
+enemy.push(enemy[6].copy());
+
+
+console.log('Entities: ' + player.countAllEntities());
+console.log('Spelers: ' + Player.count());
+console.log('Enemies: ' + Enemy.count());
+Player.showListInConsole();
 io.on('connection', function(socket) { 
     console.log('someone connected... ' + socket.id);
   
-  var worldmap = Canvas();
-
-  console.log(worldmap);
+  
   
       
 });
