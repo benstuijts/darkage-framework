@@ -30,52 +30,43 @@ const enemy = Enemy.createMultiple(12,"Struikrover");
 //console.log('Spelers: ' + Player.count());
 //console.log('Enemies: ' + Enemy.count());
 
-const GameTime = function() {
-  const gametime = {
-    turn: 10, //minuten realtime
-    turnGT: 120 * 60, // minuten gametime 120 * 60 = 7200 minuten = 120 uur = 5 dagen
-  }; 
-  
-  gametime.RTtoGT = function(RT) {
-    return {
-      milliseconds: Math.round(((1/(gametime.turnGT/gametime.turn)) * RT) * 60 * 1000),
-      seconds: ((1/(gametime.turnGT/gametime.turn)) * RT) * 60,
-      minutes: (1/(gametime.turnGT/gametime.turn)) * RT
-    };
-  };
-  
-  gametime.GTtoRT = function(GT) {
-    return {
-      milliseconds: Math.round((gametime.turn / gametime.turnGT) * GT * 60 ),
-      seconds: (gametime.turn / gametime.turnGT) * GT * 60,
-      minutes: (gametime.turn / gametime.turnGT) * GT,
-    }
-  }
-  
-  gametime.timePassed = function(turns) {
-    return {
-      turns: turns,
-      realtime: turns * gametime.turn,
-      gametime : {
-        milliseconds: turns * gametime.turnGT * 1000,
-        minutes: turns * gametime.turnGT,
-        hours: turns * gametime.turnGT / 60,
-        days: turns * gametime.turnGT / 60 / 24,
-        years: turns * gametime.turnGT / 60 / 24 / 365,
-      }
-    }
-  }
-  console.log(gametime.turnGT);
-  return gametime;
-};
+const Gameserver = require('../models/Gameserver');
+
+const gameserver = [];
+gameserver.push(Gameserver({meta: {name: 'Test Server'}}));
+gameserver.push(Gameserver({meta: {name: 'Master Server'}}));
+gameserver.push(Gameserver({meta: {name: 'Hero Server'}}));
+gameserver.push(Gameserver({meta: {name: 'Newbie Server 1'}}));
+gameserver.push(Gameserver({meta: {name: 'Newbie Server 2'}}));
+gameserver[0].setGametime(1,7200);
+gameserver[1].setGametime(5,7200);
+gameserver[2].setGametime(10,7200);
+gameserver[3].setGametime(12,7200);
+gameserver[4].setGametime(15,7200);
+
+gameserver[0].registerPlayer({_id:12},function(error, message) {
+  if(error) { console.log('!! ERROR !! '+ message);
+  } else {
+    console.log('player succesfully registered on the server ');
+  } 
+});
+
+gameserver[0].authenticatePlayer({_id:12},function(error, message) {
+  if(error) { console.log('!! ERROR !! '+ message);
+  } else {
+    console.log('player succesfully authenticaded on the server ');
+  } 
+});
+gameserver[0].deleteInactivePlayers([{_id:1},{_id:12}]);
+
 
 const Unit = function() {
   const unit = {
     speed: 5 // 5 km/uur
   };
   
-  
-  
+    
+  // This function is not independent on the tileSize
   unit.travelTime = function(gametime, distanceInMeters) {
     let travelTimeRT = 60 / (unit.speed * 1000 / distanceInMeters);
     let travelTimeGT = gametime.RTtoGT(travelTimeRT).seconds;
@@ -94,13 +85,13 @@ const Unit = function() {
   return unit;
 };
 
-const GT = GameTime();
+//const GT = GameTime();
 //console.log(GT.timePassed(1)); // 1 dag spelen (144 turns)
 //console.log(GT.RTtoGT(60));
-console.log(GT.GTtoRT(7200));
-const unit = Unit();
+//console.log(GT.GTtoRT(7200));
+//const unit = Unit();
 
-console.log(unit.travelTime(GT, 5000));
+//console.log(unit.travelTime(GT, 5000));
 
 
 io.on('connection', function(socket) { 
