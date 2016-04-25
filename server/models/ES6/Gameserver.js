@@ -1,21 +1,15 @@
-'use strict';
-const Gametime  = require('./Gametime');
-const colors    = require('colors');
+class Gameserver {
+    constructor(options) {
+        this.status = true;
+        this.muted = false;
+    }
+    
+}
 
-/*  Hoe checken we in het geval van een server error of reboot 
-    of een gameserver reeds gestart is en dus uit de database
-    gehaald dient te worden?
-    
-    Kan je niet gewoon een mongo _id opslaan en checken of deze bestaat? Zo ja, 
-    server restarten vanaf dat moment, anders volledig nieuwe server starten en opslaan 
-    in mongodb.
-    
-*/
 
 
 const Gameserver = function(options) {
     let index = Gameserver._index++;
-
     const gameserver = {
         index: index,
         status: true,
@@ -27,7 +21,6 @@ const Gameserver = function(options) {
         timeBetweenRoundsInHours: 2,
         round: 0,
         gametime: Gametime(10,7200),
-        timer: null,
         meta: {
             name: "",
             description: "",
@@ -46,9 +39,7 @@ const Gameserver = function(options) {
         players: {},
         worldmap: null
     };
-
-    //gameserver.timer = null;
-
+  
     for(var prop in options) {
         gameserver[prop] = options[prop];
     }
@@ -90,6 +81,7 @@ const Gameserver = function(options) {
     };
 
     /* Server timer controls */
+    gameserver.timer = null;
     
     gameserver.listener = function() {
         return function() {
@@ -113,7 +105,6 @@ const Gameserver = function(options) {
     };
     
     gameserver.nextTurn = function() {
-        // To do: save gameserver to database
         console.log(` Server # ${gameserver.index} "${gameserver.meta.name}" calculating next turn...`.inverse);
         gameserver.mute();
         gameserver.incrementTurn();

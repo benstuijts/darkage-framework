@@ -18,6 +18,26 @@ const Entity = function(name, type, id) {
         
     };
     
+    entity.validator = function(list, uniqueProperty, value) {
+        let flag = false;
+        for(let index in list) {
+            if(list[index][uniqueProperty] === value ) {
+                flag = true;
+            }
+        }
+        return !flag;
+    };
+    
+    entity.mandatory = function(givenOptions, properties) {
+        let flag = properties.length;
+        for(let option in givenOptions) {
+            if(properties.indexOf(option) >= -1) {
+                flag--;
+            }
+        }
+        return (flag === 0) ? true : false;
+    };
+    
     /* Method destroy */
     entity.destroy = function() {
         delete Entity.list[entity._index];

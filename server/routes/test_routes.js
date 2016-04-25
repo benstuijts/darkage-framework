@@ -39,7 +39,7 @@ gameserver.push(Gameserver({meta: {name: 'Hero Server'}}));
 gameserver.push(Gameserver({meta: {name: 'Newbie Server 1'}}));
 gameserver.push(Gameserver({meta: {name: 'Newbie Server 2'}}));
 gameserver[0].setGametime(1,7200);
-gameserver[1].setGametime(5,7200);
+gameserver[1].setGametime(0.5,7200);
 gameserver[2].setGametime(10,7200);
 gameserver[3].setGametime(12,7200);
 gameserver[4].setGametime(15,7200);
@@ -58,6 +58,7 @@ gameserver[0].authenticatePlayer({_id:12},function(error, message) {
   } 
 });
 gameserver[0].deleteInactivePlayers([{_id:1},{_id:12}]);
+
 
 
 const Unit = function() {
@@ -95,11 +96,10 @@ const Unit = function() {
 
 
 io.on('connection', function(socket) { 
-    console.log('someone connected... ' + socket.id);
+    //console.log('someone connected... ' + socket.id);
   
+  require('../login/login')(socket);
   
-  
-      
 });
 
 router.get('/',function(req,res){

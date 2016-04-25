@@ -1,6 +1,14 @@
 <% include _html/head %>
 
 <h1>Game test</h1>
+<div id="game-core">
+    <h1>The Game has been started.</h1>
+</div>
+<div id="game-login">
+    <h1>Login to start the game</h1>
+    <button onclick="login()">Login Demo Player</button>
+    <div class="alert alert-info" role="alert" id="message"></div>
+</div>
 
 <% include _html/scripts %>
 <% include _html/end %>

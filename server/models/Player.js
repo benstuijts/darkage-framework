@@ -4,9 +4,13 @@ const colors = require('colors');
 
 const Entity    = require('./Entity');
 
+// Let op op Playerobject moet unique zijn!
+
 const Player = function(name, type, id) {
-    let index = Player._index++;
     const player = Entity(name, type, id);
+    if(player.validator(Player.list, "name", name) === false) return false;
+    
+    let index = Player._index++;
     
     /* Properties */
     player._index = index;
@@ -43,8 +47,11 @@ const Player = function(name, type, id) {
         });
     };
     
-    Player.list[index] = player;
-    return player;
+    
+            Player.list[index] = player;
+            return player;
+      
+    
 };
 Player._index = 0;
 Player.list = {};
