@@ -7,8 +7,11 @@ const Entity    = require('./Entity');
 // Let op op Playerobject moet unique zijn!
 
 const Player = function(name, type, id) {
+    
     const player = Entity(name, type, id);
     if(player.validator(Player.list, "name", name) === false) return false;
+    
+    
     
     let index = Player._index++;
     

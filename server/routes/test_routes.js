@@ -60,6 +60,24 @@ gameserver[0].authenticatePlayer({_id:12},function(error, message) {
 gameserver[0].deleteInactivePlayers([{_id:1},{_id:12}]);
 
 
+const Entity = require("../ECS/Entity");
+const Health = require("../ECS/components/Health");
+const Position = require("../ECS/components/Position");
+
+console.log(Health);
+
+const entities = [];
+const entity = Entity();
+entity.print();
+
+entity.addComponent(Health);
+entity.addComponent(Position);
+entity.print();
+
+//entity.removeComponent(Health);
+entity.set( { worldmapX: 80, worldmapY: 666, hp: 900 } );
+
+entity.print();
 
 const Unit = function() {
   const unit = {

@@ -34,13 +34,12 @@
   const configDb = require('./config/database.js');
 
 /* Database */
-  mongoose.connect(configDb.localhost.url, function(err){
-      if(err) {console.log('! NOT Connected to database');}
-      console.log('# Connected to database: ' + configDb.localhost.name);
-  });
+
+const db = require('./config/mongodb');
+
   // Make our db accessible to our router
   app.use(function(req,res,next){
-      req.db = 'database instance';
+      req.db = db;
       next();
   });
 

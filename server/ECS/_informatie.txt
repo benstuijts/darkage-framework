@@ -1,0 +1,13 @@
+http://vasir.net/blog/game-development/how-to-build-entity-component-system-in-javascript
+
+Entity-Component-System
+Discovering Entity Component System (ECS) was an "ah-hah" moment for me. 
+With ECS, entities are just collections of components; just a collection of data.
+
+Entity: An entity is just an ID
+Component: Components are just data.
+System: Logic that runs on every entity that has a component of the system. 
+For example, a "Renderer" system would draw all entities that have a "appearance" component.
+
+var entity = new Entity();
+ entity.addComponent( new Health() );
