@@ -102,6 +102,13 @@ const Entity = function() {
         }
     };
     
+    entity.addComponents = function(components) {
+        for(let i=0; i<arguments.length; i++) {
+            this.addComponent(arguments[i]);
+        }
+        return this;
+    };
+    
     entity.addComponent = function(component) {
         if(typeof component === 'object') {
             this.components[component._name.toLowerCase()] = component;
@@ -110,7 +117,7 @@ const Entity = function() {
             this.components[component()._name.toLowerCase()] = component();
         }
         return this;
-    }.bind(entity);
+    };
     
     entity.removeComponent = function(component) {
         let _name;
@@ -138,6 +145,9 @@ const Entity = function() {
 };
 Entity._index = 0;
 Entity.list = {};
+Entity.random = function(min, max) {
+    return Math.round(Math.random() * (max-min) + min);
+};
 
 module.exports = Entity;
 

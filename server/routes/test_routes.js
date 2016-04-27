@@ -63,20 +63,31 @@ gameserver[0].deleteInactivePlayers([{_id:1},{_id:12}]);
 const Entity = require("../ECS/Entity");
 const Health = require("../ECS/components/Health");
 const Position = require("../ECS/components/Position");
+const RandomPosition = require("../ECS/components/RandomPosition");
 const Character = require("../ECS/components/Character");
 
 console.log(Health);
 
 const entities = [];
 
-const rock = Entity().addComponent(Position(12,20));
-entities.push(rock);
-//entities.push(Entity().addComponent(Position));
-entities.push(Entity().addComponent(Position).addComponent(Character("Super Hero")));
-
-//entities[0].addComponent(Health);
-entities[1].print();
-console.log(entities[1].get('worldmapX', 'worldmapY', 'hp'));
+for(var i=0; i<10;i++) {
+  entities.push(Entity()
+                .addComponents(
+                  Character("Enemy #" + i),
+                  Position,
+                  Health(Entity.random(20,50))
+                )
+  );
+  /*
+  entities.push(Entity()
+                .addComponent(Character("Enemy #" + i))
+                .addComponent(RandomPosition(0,0,100,100))
+                .addComponent(Health(25))
+  );
+  */
+}
+entities[0].print();
+console.log(entities[0].get('worldmapX', 'worldmapY', 'hp')); 
 
 /*
 const entity = Entity();
