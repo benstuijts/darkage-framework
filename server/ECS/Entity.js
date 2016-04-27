@@ -6,12 +6,66 @@ const Entity = function() {
     let index = Entity._index++;
     const entity = {
         _index: index,
-        id: (+new Date()).toString(16) + (Math.random() * 100000000 | 0).toString(16) + index,
+        _id: (+new Date()).toString(16) + (Math.random() * 100000000 | 0).toString(16) + index,
         components: {},
     };
     
+    entity.get = function(property) {
+        
+        /* example: entities[0].get('worldmapY', 'worldmapX') -> returns { worldmapX: 20, worldmapY: 20 } */
+        
+        if(arguments.length > 1) {
+            let _flag_allFound = arguments.length,
+                returnObject = {};
+            for(let i=0; i<arguments.length;i++) {
+                returnObject[arguments[i]] = null;
+            }
+
+            for(let component in this.components) {
+                if(_flag_allFound == 0) {
+                    return returnObject;
+                }
+                for(let i=0; i<arguments.length; i++) {
+                    if(this.components[component].hasOwnProperty(arguments[i])) {
+                        returnObject[arguments[i]] = this.components[component][arguments[i]];
+                        _flag_allFound = _flag_allFound - 1;
+                    } 
+                }
+            }
+            return returnObject;
+        }
+        
+        /* example: entities[0].get('worldmapY') */
+        if(typeof property === 'string') {
+            for(let component in this.components) {
+                if(this.components[component].hasOwnProperty(property)) {
+                    return this.components[component][property];
+                }
+            }
+        }
+        /* example: entities[0].get(['worldmapY', 'worldmapX']) -> returns [ 20,12] */
+        if(property instanceof Array) {
+            let _flag_allFound = property.length,
+                returnArray = [];
+            for(let component in this.components) {
+                if(_flag_allFound == 0) {
+                    return returnArray;
+                }
+                for(let i=0; i<property.length; i++) {
+                    if(this.components[component].hasOwnProperty(property[i])) {
+                        returnArray.push(this.components[component][property[i]]);
+                        _flag_allFound = _flag_allFound - 1;
+                    } 
+                }
+            }
+            if(_flag_allFound == 0) {
+                return returnArray;
+            } else { return false; }
+        }
+    }
+    
     entity.set = function(property, value) {
-        if(property === 'name') { console.log("Cannot set the component's name!"); return; }
+        if(property === '_name') { console.log("Cannot set the component's name!"); return; }
         
         /* example: entity.set( 'worldmapX', 80 ); */
         
@@ -50,27 +104,27 @@ const Entity = function() {
     
     entity.addComponent = function(component) {
         if(typeof component === 'object') {
-            this.components[component.name.toLowerCase()] = component;
+            this.components[component._name.toLowerCase()] = component;
         }
         if(typeof component === 'function') {
-            this.components[component().name.toLowerCase()] = component();
+            this.components[component()._name.toLowerCase()] = component();
         }
         return this;
-    };
+    }.bind(entity);
     
     entity.removeComponent = function(component) {
-        let name;
+        let _name;
         if(typeof component === 'string'){
-            name = component;
+            _name = component;
         }
         if(typeof component === 'object'){
             console.log('object');
-            name = component.name;
+            _name = component._name;
         }
         if(typeof component === 'function'){
-            name = component().name.toLowerCase();
+            _name = component()._name.toLowerCase();
         }
-        delete this.components[name.toLowerCase()];
+        delete this.components[_name.toLowerCase()];
         return this;
     };
     
@@ -79,6 +133,7 @@ const Entity = function() {
         return this;    
     };
     
+    Entity.list[index] = entity;
     return entity;
 };
 Entity._index = 0;

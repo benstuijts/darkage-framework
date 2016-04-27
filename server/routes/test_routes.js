@@ -63,10 +63,22 @@ gameserver[0].deleteInactivePlayers([{_id:1},{_id:12}]);
 const Entity = require("../ECS/Entity");
 const Health = require("../ECS/components/Health");
 const Position = require("../ECS/components/Position");
+const Character = require("../ECS/components/Character");
 
 console.log(Health);
 
 const entities = [];
+
+const rock = Entity().addComponent(Position(12,20));
+entities.push(rock);
+//entities.push(Entity().addComponent(Position));
+entities.push(Entity().addComponent(Position).addComponent(Character("Super Hero")));
+
+//entities[0].addComponent(Health);
+entities[1].print();
+console.log(entities[1].get('worldmapX', 'worldmapY', 'hp'));
+
+/*
 const entity = Entity();
 entity.print();
 
@@ -78,6 +90,7 @@ entity.print();
 entity.set( { worldmapX: 80, worldmapY: 666, hp: 900 } );
 
 entity.print();
+*/
 
 const Unit = function() {
   const unit = {

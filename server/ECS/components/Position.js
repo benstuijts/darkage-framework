@@ -1,7 +1,7 @@
 'use strict';
 const Position = function(worldmapX, worldmapY) {
     const component = {
-        name: 'position',
+        _name: 'position',
         worldmapX: worldmapX || 0,
         worldmapY: worldmapY|| 0
     };
