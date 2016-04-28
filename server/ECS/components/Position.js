@@ -1,11 +1,20 @@
 'use strict';
-const Position = function(worldmapX, worldmapY) {
-    const component = {
-        _name: 'position',
-        worldmapX: worldmapX || 0,
-        worldmapY: worldmapY|| 0
+const Component = require('./Component');
+
+module.exports = function(worldmapX, worldmapY) {
+    
+    const component = new Component();
+    
+    component._name = 'position';
+    component.worldmapX = worldmapX || 0;
+    component.worldmapY = worldmapY || 0;
+    
+    component.events = {
+        'move' : function(position) {
+            component.set(position);
+        }.bind(this)
     };
+
     return component;
 };
 
-module.exports = Position;

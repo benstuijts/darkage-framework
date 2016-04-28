@@ -102,6 +102,12 @@ const Entity = function() {
         }
     };
     
+    entity.emit = function(event, obj, callback) {
+        for(let component in this.components) {
+            this.components[component].on(event, obj, callback);
+        }
+    };
+    
     entity.addComponents = function(components) {
         for(let i=0; i<arguments.length; i++) {
             this.addComponent(arguments[i]);
@@ -110,7 +116,12 @@ const Entity = function() {
     };
     
     entity.addComponent = function(component) {
+        
         if(typeof component === 'object') {
+
+            component['emit'] = entity.emit.bind(this);
+            component['set'] = entity.set.bind(this);
+            component['get'] = entity.get.bind(this);
             this.components[component._name.toLowerCase()] = component;
         }
         if(typeof component === 'function') {

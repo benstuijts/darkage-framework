@@ -65,29 +65,27 @@ const Health = require("../ECS/components/Health");
 const Position = require("../ECS/components/Position");
 const RandomPosition = require("../ECS/components/RandomPosition");
 const Character = require("../ECS/components/Character");
+const Moveable = require("../ECS/components/Moveable");
 
-console.log(Health);
+
 
 const entities = [];
 
 for(var i=0; i<10;i++) {
   entities.push(Entity()
                 .addComponents(
-                  Character("Enemy #" + i),
-                  Position,
-                  Health(Entity.random(20,50))
+                  Character("Enemy #"+i),
+                  Position(10,20),
+                  Moveable()
                 )
   );
-  /*
-  entities.push(Entity()
-                .addComponent(Character("Enemy #" + i))
-                .addComponent(RandomPosition(0,0,100,100))
-                .addComponent(Health(25))
-  );
-  */
+  
 }
 entities[0].print();
-console.log(entities[0].get('worldmapX', 'worldmapY', 'hp')); 
+entities[0].emit('update', function(m){ console.log(m)});
+entities[0].print();
+
+
 
 /*
 const entity = Entity();
