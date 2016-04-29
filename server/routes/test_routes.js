@@ -70,6 +70,23 @@ const Moveable = require("../ECS/components/Moveable");
 
 
 const entities = [];
+const lib = require('../modules/retrieve');
+
+
+
+//console.log(retrieve.get('enemy.ridder'));
+lib.set('enemy.ridder.hp', 99);
+console.log(lib.get('enemy.ridder'));
+lib.add('enemy', {
+  viking: {
+    hp: 30,
+    speed: 1,
+    attack: 2,
+    armor: 1
+  }
+});
+console.log(lib.get('enemy'));
+
 
 for(var i=0; i<10;i++) {
   entities.push(Entity()
@@ -81,10 +98,19 @@ for(var i=0; i<10;i++) {
   );
   
 }
-entities[0].print();
-entities[0].emit('update', function(m){ console.log(m)});
-entities[0].print();
+//entities[0].print();
+//entities[0].emit('update');
+//entities[0].print();
 
+const highwayman = Entity().define().addComponents(Character(), Moveable);
+// Je kunt niet direct chainen na addComponents!
+//highwayman.emit('update');
+
+entities.push(highwayman);
+entities.push(Entity().addComponent(Character("Ben")));
+entities.push(highwayman);
+
+//entities[10].print();
 
 
 /*
@@ -137,6 +163,11 @@ const Unit = function() {
 
 io.on('connection', function(socket) { 
     //console.log('someone connected... ' + socket.id);
+  
+  socket.on("loadMap", function(map, cb){
+    console.log(map);
+    cb('this map comes from the server...');
+  });
   
   require('../login/login')(socket);
   

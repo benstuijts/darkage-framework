@@ -6,17 +6,21 @@ const Character = function(name) {
     
     const component = new Component();
 
-    //console.log(arguments);
-
     component._name = "character";
     component.name = name || "Character";
     
     component.events = {
+        'changeCharacterName' : function(name) {
+            this.name = name;    
+        }.bind(this),
+        
+        
         'update' : function(obj,callback) {
             console.log('updating component of ' + component._name);
             console.log('emiting now to other components the message "moveTo"...');
+            console.log('ACTIVE = ' + component.checkIfActive());
             component.emit('moveTo', {worldmapX: 99, worldmapY: 99, speed: 41});
-            callback('END');
+            
         }.bind(this),
         
     }

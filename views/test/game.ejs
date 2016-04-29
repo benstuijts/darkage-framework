@@ -9,6 +9,21 @@
     <button onclick="login()">Login Demo Player</button>
     <div class="alert alert-info" role="alert" id="message"></div>
 </div>
+<style>
+    body {
+        overflow-x: hidden;
+    }
+    
+    #mainCanvas {
+        box-sizing: border-box;
+        background: #6495ED;
+    }
+    #debugCanvas {
+        border: 2px solid gold;
+    }
+</style>
+<canvas id="mainCanvas" width="700" height="500"></canvas>
+<canvas id="debugCanvas" width="700" height="500" style="float: right;"></canvas>
 
 <% include _html/scripts %>
 <% include _html/end %>

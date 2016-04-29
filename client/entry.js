@@ -1,3 +1,38 @@
+import Entity from './isometricEngine/Entity';
+import Canvas from './isometricEngine/Canvas';
+import Sockets from './isometricEngine/Sockets';
+import Map from './isometricEngine/Map';
+
+const game = Entity("playerMap").addComponents(
+  Canvas("mainCanvas"),
+  Sockets(socket),
+  Map()
+);
+
+window.addEventListener("resize", function() {
+  game.emit("resize");
+});
+
+game.print();
+game.emit("loadMap", {startX: 0, startY:0, endX: 100, endY: 70});
+game.print();
+
+//const game = new Game(initFullScreenCanvas("mainCanvas"));
+
+function initFullScreenCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  resizeCanvas(canvas);
+  window.addEventListener("resize", function(){
+    resizeCanvas(canvas);
+  });
+  return canvas;
+}
+function resizeCanvas(canvas) {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  game && game.resize();
+}
+
 /*
 import React from 'react';
 import ReactDOM from 'react-dom';
