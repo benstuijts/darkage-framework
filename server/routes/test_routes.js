@@ -60,21 +60,202 @@ gameserver[0].authenticatePlayer({_id:12},function(error, message) {
 gameserver[0].deleteInactivePlayers([{_id:1},{_id:12}]);
 
 
-const Entity = require("../ECS/Entity");
-const Health = require("../ECS/components/Health");
-const Position = require("../ECS/components/Position");
-const RandomPosition = require("../ECS/components/RandomPosition");
-const Character = require("../ECS/components/Character");
-const Moveable = require("../ECS/components/Moveable");
+
+//const Health = require("../ECS/components/Health");
+//const Position = require("../ECS/components/Position");
+//const RandomPosition = require("../ECS/components/RandomPosition");
+//const Character = require("../ECS/components/Character");
+//const Moveable = require("../ECS/components/Moveable");
 
 
 
 const entities = [];
-const lib = require('../modules/retrieve');
+//const lib = require('../modules/retrieve');
+
+function addComponent(entity, component) {
+  if(typeof component === 'object') {
+    entity.components[component._name] = component;
+  }
+  if(typeof component === 'function') {
+    addComponent(entity, component()) ;
+  }
+}
+function addComponents(entity, components) {
+  for(let component in components) {
+    addComponent(entity, components[component]);
+  }
+}
+
+const Entity = require("../ECS/v1/Entity");
+const Position = require("../ECS/v1/Position");
+const Animated = require("../ECS/v1/Animated");
+const Rect = require("../models/Rect");
+
+const tile = Entity();
+//addComponent(tile, Position);
+
+//addComponents(tile, [
+//  Position(2,2),
+//  Animated
+//]);
+tile.print();
+
+function Worldmap(size, clusterSize) {
+  this.map = [];
+  this.entity = [];
+  this.size = size;
+  this.cluster = [];
+  this.clusterSize = clusterSize || 5000; //px -> 5000 x 2500 px isometric
+  this.isometric = true;
+  this.tileSize = { width: 100, height: 50 }
+  this.initializeClusters();
+};
+
+Worldmap.prototype.initializeClusters = function() {
+  
+  let sizeX = this.size * this.tileSize.width;
+  let sizeY = this.size * this.tileSize.height;
+  let clusterX = sizeX/this.clusterSize;
+  let clusterY = (this.isometric) ? sizeY/(this.clusterSize/2) : this.clusterSize;
+  
+  for(let x=0; x<clusterX; x++) {
+    this.cluster[x] = [];
+    for(let y=0; y<clusterY; y++) {
+      this.cluster[x][y] = {
+        entity: [],
+        rect: new Rect(x * this.clusterSize, y * (this.clusterSize/2), this.clusterSize, this.clusterSize/2),
+      };
+    }
+  }
+};
+
+Worldmap.prototype.clustersInfo = function() {
+  for(let clusterX=0; clusterX<this.cluster.length; clusterX++) {
+    for(let clusterY=0; clusterY<this.cluster[0].length; clusterY++) {
+      console.log(`Cluster[${clusterX}][${clusterY}] contains ${this.cluster[clusterX][clusterY].entity.length} entities`)      
+    }
+  }
+};
+
+Worldmap.prototype.updateClusters = function(oldEntity, newEntity) {
+  let start = new Date;
+  // entity has moved or been destroyed, update the clusters
+  
+  
+  for(let clusterX=0; clusterX<this.cluster.length; clusterX++) {
+    for(let clusterY=0; clusterY<this.cluster[0].length; clusterY++) {
+      // First remove old entity
+      for(let i=0; i<this.cluster[clusterX][clusterY].entity.length; i++) {
+        if(this.cluster[clusterX][clusterY].entity[i]._id == oldEntity._id) {
+          this.cluster[clusterX][clusterY].entity.splice(i, 1);
+        }
+      }
+      // Place new entity in cluster
+      if(this.cluster[clusterX][clusterY].rect.containsPoint(newEntity.components.position.rect.x,newEntity.components.position.rect.y)) {
+        this.cluster[clusterX][clusterY].entity.push(newEntity);
+        break;
+      }
+    }
+  }
+  
+  let duration = new Date() - start;
+  console.log(`Updating clusters in ${duration} ms.`);
+};
+Worldmap.prototype.showSizeOfWorldmap = function() {
+  let sizeX = this.size * this.tileSize.width;
+  let sizeY = this.size * this.tileSize.height;
+  console.log(`(0,0)-(${sizeX},${sizeY})`);
+};
+Worldmap.prototype.countEntities = function() {
+  console.log(Object.keys(this.entity).length);
+}
+Worldmap.prototype.print = function() {
+  console.log(JSON.stringify(this, null, 4));
+  return this;    
+};
+Worldmap.prototype.worldToIso = function(worldX, worldY) {
+  /* Let op: De worldmap wordt verplaatst naar 0,0 */
+  let isoX = ( worldX - worldY ) * this.tileSize.width/2 ;
+  let isoY = ((worldX + worldY) / 2 ) * this.tileSize.height;
+  
+  isoX += (this.size * this.tileSize.width / 2) - (this.tileSize.width / 2);
+  
+  return {
+    isoX: Math.round(isoX),
+    isoY: Math.round(isoY)
+  };
+};
+Worldmap.prototype.isoToWorld = function(isoX, isoY) {
+  isoX -= (this.size * this.tileSize.width / 2) - (this.tileSize.width / 2);
+  let worldX = ((2 * isoY + isoX) / 2) / this.tileSize.width * 2;
+  let worldY = ((2 * isoY - isoX) / 2) / this.tileSize.height;
+  return {
+    worldX: Math.round(worldX),
+    worldY: Math.round(worldY)
+  }
+}
+Worldmap.prototype.randomMap = function() {
+  let x,y, start = new Date;
+  for(x=0;x<this.size;x++) {
+    this.map[x] = [];
+    for(y=0;y<this.size; y++) {
+      let t = Entity();
+      let iso = this.worldToIso(x,y);
+      addComponents(t, [
+        Position({worldX: x, worldY: y, isoX: iso.isoX, isoY: iso.isoY, width:this.tileSize.width, height: this.tileSize.height  }),
+        Animated
+      ]);
+      // Place entity in isometric world
+      this.map[x][y] = t;
+      // Save entity in worldmap class
+      this.entity.push(t);
+      // Place entity in cluster
+      for(let clusterX=0; clusterX<this.cluster.length; clusterX++) {
+        for(let clusterY=0; clusterY<this.cluster[0].length; clusterY++) {
+          let e = t.components;
+          let c = this.cluster[clusterX][clusterY];
+          if(c.rect.containsPoint(e.position.rect.x, e.position.rect.y)) {
+            this.cluster[clusterX][clusterY].entity.push(this.map[x][y]);
+            break;
+          }
+        }
+      }
+      
+      
+      
+      
+    }
+  }
+  
+  this.clustersInfo();
+  
+  //this.updateClusters();
+  let duration = new Date() - start;
+  console.log(`Random map created in ${duration} ms.`);
+}
+
+const newbie = new Worldmap(4, 200);
+newbie.randomMap();
+//newbie.print();
+newbie.cluster[0][0].entity[4]._id = "tracker";
+//newbie.cluster[0][0].entity[4].components.position._name = "tracker";
+console.log(newbie.cluster[0][0].entity[4]);
+// entity verplaatsen naar isometrische coördinaten (200,75)
+let oldEntity = newbie.cluster[0][0].entity[4];
+let newEntity = newbie.cluster[0][0].entity[4];
+newEntity.components.position.rect.x = 200;
+newEntity.components.position.rect.y = 75;
 
 
+// dit gaat goed, alleen nog de entities binnen het cluster sorteren op een x en vooral y waarde.
+newbie.updateClusters(oldEntity, newEntity);
+
+
+newbie.countEntities();
+newbie.showSizeOfWorldmap();
 
 //console.log(retrieve.get('enemy.ridder'));
+/*
 lib.set('enemy.ridder.hp', 99);
 console.log(lib.get('enemy.ridder'));
 lib.add('enemy', {
@@ -86,8 +267,8 @@ lib.add('enemy', {
   }
 });
 console.log(lib.get('enemy'));
-
-
+*/
+/*
 for(var i=0; i<10;i++) {
   entities.push(Entity()
                 .addComponents(
@@ -98,17 +279,18 @@ for(var i=0; i<10;i++) {
   );
   
 }
+*/
 //entities[0].print();
 //entities[0].emit('update');
 //entities[0].print();
 
-const highwayman = Entity().define().addComponents(Character(), Moveable);
+//const highwayman = Entity().define().addComponents(Character(), Moveable);
 // Je kunt niet direct chainen na addComponents!
 //highwayman.emit('update');
 
-entities.push(highwayman);
-entities.push(Entity().addComponent(Character("Ben")));
-entities.push(highwayman);
+//entities.push(highwayman);
+//entities.push(Entity().addComponent(Character("Ben")));
+//entities.push(highwayman);
 
 //entities[10].print();
 

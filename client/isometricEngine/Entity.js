@@ -1,4 +1,6 @@
 'use strict';
+const Rect = require('../models/Rect');
+
 Object.prototype.hasOwnProperty = function(property) {
     return this[property] !== undefined;
 };
@@ -8,9 +10,46 @@ const Entity = function(name) {
     const entity = {
         _index: index,
         _id: (+new Date()).toString(16) + (Math.random() * 100000000 | 0).toString(16) + index,
+        _name: name || null,
         components: {},
         active: true,
-        name: name || null,
+        
+        bounds: new Rect(0,0,100,100),
+    };
+    
+    entity.setSize = function(width, height) {
+        this.bounds.width = width;
+        this.bounds.height = height;
+    };
+    
+    entity.move = function(deltaX, deltaY) {
+        this.setPosition(this.bounds.x + deltaX, this.bounds.y + deltaY)    
+    };
+    
+    entity.getBounds = function() {
+        return this.bounds;
+    };
+    
+    entity.getId = function() {
+        return this._id;
+    };
+    
+    entity.setPosition = function(x,y) {
+        // Check if Entity has moved
+        if(this.bounds.x != x || this.bounds.y != y) {
+            let eventData = {
+                oldX: this.bounds.x,
+                oldY: this.bounds.y,
+                x:x,
+                y:y,
+                object: this
+            };
+            this.bounds.x = x;
+            this.bounds.y = y;
+            
+            // this.emit("move", eventData) !!!!! <-- wat gebeurd hier precies???
+            
+        }
     };
     
     entity.define = function() {
@@ -128,6 +167,30 @@ const Entity = function(name) {
     entity.addComponents = function(components) {
         for(let i=0; i<arguments.length; i++) {
             this.addComponent(arguments[i]);
+            
+            // Only proceed when the component is fully loaded.
+            //this.addComponent(arguments[i], callback -> i++)
+            /*
+            let numberOfComponents = arguments.length;
+            let currentIndexOfComponent = 0;
+            
+            while(currentIndexOfComponent < numberOfComponents) {
+                let currentComponentToBeLoaded = arguments[currentIndexOfComponent];
+                load(currentComponentToBeLoaded, function(component) {
+                    this.addComponent(component);
+                    currentIndexOfComponent++;
+                })
+            }
+            
+            function load(component, done) {
+                let c = component;
+                return c;
+            }
+            
+            
+            
+            */
+            
         }
         return this;
     };
@@ -140,6 +203,23 @@ const Entity = function(name) {
             component['set'] = entity.set.bind(this);
             component['get'] = entity.get.bind(this);
             component['checkIfActive'] = entity.checkIfActive.bind(this);
+            component['random'] = Entity.random;
+            
+            // callback for async loading (eg graphics!)
+            /*
+            
+            component() {
+                return component
+            }
+            
+            load(getThisComponent, function(returnTheComponent){
+                component[component._name.toLowerCase()] = returnTheComponent
+            })
+            
+            
+            */
+            
+            
             
             this.components[component._name.toLowerCase()] = component;
         }
@@ -173,6 +253,9 @@ const Entity = function(name) {
     };
     
     Entity.list[index] = entity;
+    Entity.count = function() {
+        console.log(Entity.list.length);
+    }
     return entity;
 };
 Entity._index = 0;

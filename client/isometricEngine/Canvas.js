@@ -11,9 +11,9 @@ const Canvas = function(canvasId) {
     component.ctx = component.canvas.getContext("2d");
     
     component.events = {
-        "resize" : function() {
-            console.log('resize ' + this._name);
-            this.resize();
+        "resize" : function({ width, height }) {
+            console.log('resize ' + this._name + ' to ' + width + ', ' + height);
+            this.resize(width, height);
         }.bind(component),
         "clear" : function() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -21,11 +21,12 @@ const Canvas = function(canvasId) {
         }.bind(component)
     };
     
-    component.resize = function() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-    }
-    component.resize();
+    component.resize = function(width, height) {
+        this.canvas.width = width;
+        this.canvas.height = height;
+    };
+    
+    component.resize(window.innerWidth, window.innerWidth);
     return component;
 }
 
