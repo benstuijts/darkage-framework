@@ -15,5 +15,34 @@ const Entity = function() {
 }
 Entity._index = 0;
 Entity.list = {};
+Entity.addComponent = function(entity, component) {
+    if(typeof component === 'object') {
+        entity.components[component._name] = component;
+    }
+    if(typeof component === 'function') {
+        Entity.addComponent(entity, component()) ;
+    }
+    return this;
+};
+Entity.addComponents = function(entity, components) {
+    for(let component in components) {
+        Entity.addComponent(entity, components[component]);
+    }
+    return this;
+};
+Entity.removeComponent = function(entity, component) {
+    let _name;
+    if(typeof component === 'string'){
+        _name = component;
+    }
+    if(typeof component === 'object'){
+        _name = component._name;
+    }
+    if(typeof component === 'function'){
+        _name = component()._name.toLowerCase();
+    }
+    delete entity.components[_name.toLowerCase()];
+    return this;
+};
 
 module.exports = Entity;
