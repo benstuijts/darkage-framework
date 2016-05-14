@@ -1,20 +1,15 @@
 'use strict';
-const Component = require('./Component');
-
-module.exports = function(worldmapX, worldmapY) {
-    
-    const component = new Component();
-    
-    component._name = 'position';
-    component.worldmapX = worldmapX || 0;
-    component.worldmapY = worldmapY || 0;
-    
-    component.events = {
-        'move' : function(position) {
-            component.set(position);
-        }.bind(this)
+const Rect = require('./Rect');
+const Position = function( options ) {
+    const component = {
+        _name : 'position',
+        worldX:  options.worldX || 0,
+        worldY:  options.worldY || 0,
+        isoX:  options.isoX || 0,
+        isoY:  options.isoY || 0,
+        rect: new Rect(options.isoX, options.isoY, options.width, options.height)
     };
-
     return component;
 };
 
+module.exports = Position;

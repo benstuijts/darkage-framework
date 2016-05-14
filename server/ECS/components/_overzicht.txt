@@ -1,0 +1,11 @@
+Animated
+    currentFrame
+    numberOfFrames
+
+Position
+    worldX, worldY
+    isoX, isoY
+    rect
+
+
+

@@ -87,9 +87,10 @@ function addComponents(entity, components) {
 }
 
 const Worldmap = require("../models/Worldmap");
-const Entity = require("../ECS/v1/Entity");
-const Position = require("../ECS/v1/Position");
-const Animated = require("../ECS/v1/Animated");
+
+const Entity = require("../ECS/Entity");
+const Position = require("../ECS/components/Position");
+const Animated = require("../ECS/components/Animated");
 const Rect = require("../models/Rect");
 
 const tile = Entity();
@@ -105,22 +106,26 @@ tile.print();
 const newbie = new Worldmap(4, 200);
 newbie.randomMap();
 //newbie.print();
-newbie.cluster[0][0].entity[4]._id = "tracker";
+//newbie.cluster[0][0].entity[4]._id = "tracker";
 //newbie.cluster[0][0].entity[4].components.position._name = "tracker";
-console.log(newbie.cluster[0][0].entity[4]);
+//console.log(newbie.cluster[0][0].entity[4]);
 // entity verplaatsen naar isometrische coördinaten (200,75)
-let oldEntity = newbie.cluster[0][0].entity[4];
-let newEntity = newbie.cluster[0][0].entity[4];
-newEntity.components.position.rect.x = 200;
-newEntity.components.position.rect.y = 75;
+//let oldEntity = newbie.cluster[0][0].entity[4];
+//let newEntity = newbie.cluster[0][0].entity[4];
+//newEntity.components.position.rect.x = 200;
+//newEntity.components.position.rect.y = 75;
 
 
 // dit gaat goed, alleen nog de entities binnen het cluster sorteren op een x en vooral y waarde.
-newbie.updateClusters(oldEntity, newEntity);
+//newbie.updateClusters(oldEntity, newEntity);
 
 
 newbie.countEntities();
 newbie.showSizeOfWorldmap();
+
+newbie.emit("update", {a:1, b:2}, function(response) {
+  console.log(response);
+});
 
 //console.log(retrieve.get('enemy.ridder'));
 /*
