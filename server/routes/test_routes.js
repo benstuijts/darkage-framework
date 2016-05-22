@@ -88,6 +88,9 @@ function addComponents(entity, components) {
 
 const Worldmap = require("../models/Worldmap");
 
+const WorldMap = require("../models/WorldMap");
+const Pubsub = require("../models/Pubsub");
+
 const Entity = require("../ECS/Entity");
 const Position = require("../ECS/components/Position");
 const Animated = require("../ECS/components/Animated");
@@ -103,8 +106,25 @@ const tile = Entity();
 tile.print();
 
 
-const newbie = new Worldmap(4, 200);
-newbie.randomMap();
+//const newbieWorldmap = new Worldmap(Pubsub, 4, 200);
+//newbieWorldmap.randomMap();
+
+const newbie = WorldMap(4, {width: 200, height: 100});
+
+newbie.utils.randomMap();
+console.log(newbie.map[1][1]);
+newbie.create.tile(1,1,"water");
+
+console.log(newbie.map[1][1]);
+
+
+
+
+
+
+
+
+
 //newbie.print();
 //newbie.cluster[0][0].entity[4]._id = "tracker";
 //newbie.cluster[0][0].entity[4].components.position._name = "tracker";
@@ -120,12 +140,10 @@ newbie.randomMap();
 //newbie.updateClusters(oldEntity, newEntity);
 
 
-newbie.countEntities();
-newbie.showSizeOfWorldmap();
+//newbieWorldmap.countEntities();
+//newbieWorldmap.showSizeOfWorldmap();
 
-newbie.emit("update", {a:1, b:2}, function(response) {
-  console.log(response);
-});
+Pubsub.emit("update");
 
 //console.log(retrieve.get('enemy.ridder'));
 /*

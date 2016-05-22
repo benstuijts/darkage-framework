@@ -5,6 +5,17 @@ const Rect      = require("./Rect");
 const Entity    = require("../ECS/Entity");
 const Position  = require("../ECS/components/Position");
 const Animated  = require("../ECS/components/Animated");
+const Graphic  = require("../ECS/components/Graphic");
+const Meta  = require("../ECS/components/Meta");
+
+/* Worldmap tiles */
+const tiles     = require("../config/nature/worldmapTiles");
+
+/* Pre programmed units: */
+const simple_soldier = require("../config/unit/simple_soldier.js");
+
+/* Gamestuff loader */
+//const Lookup    = require("./Lookup.js").add(tiles);
 
 function EventEmitter() {
   this.events = {}
@@ -18,9 +29,8 @@ EventEmitter.prototype.emit = function(event, callback) {
   this.events[event](callback);
 }
 
-
 /* Constructor */
-const Worldmap = function(size, clusterSize) {
+const Worldmap = function(Pubsub, size, clusterSize) {
     // Coordinaten stelsel:
     // worldX, worldY   [indexes]   Coordinaten in de map     
     // isoX, isoY       [px]        Werkelijke coordinaten op de totale worldmap, isometric projection
@@ -43,6 +53,10 @@ const Worldmap = function(size, clusterSize) {
     this.addEventListener("update", function(data, callback){
       console.log('updating worldmap' + data);
       callback('done');
+    });
+    
+    Pubsub.on("update", function(){
+      console.log('updating worldmap');
     });
     
 };
@@ -93,27 +107,32 @@ Worldmap.prototype.initializeBuffer = function() {
   }
   this.buffer.lastindex = { x:this.size*2, y: this.size * 2 };
 };
-Worldmap.prototype.createBuffer = function() {
+
+Worldmap.prototype.updateBuffer = function() {
+  
+  let widthOfOneUnitInBuffer = Math.round(this.tileSize.width / 2);
+  let heightOfOneUnitInBuffer = Math.round(this.tileSize.height / 2);
+  
   for(let i=0;i<this.entity.length; i++) {
     //console.log(i + ' => ' + this.entity[i].components.position.isoX + ', ' + this.entity[i].components.position.isoY);
     let entity = this.entity[i].components.position;
-    let bufferIndexX = null, bufferIndexY = null;
-    
-    if(entity.isoY%50 === 0 ) {
-      let bufferIndexY = entity.isoY/25;
-      let bufferIndexX = entity.isoX/50;
-      //this.buffer[bufferIndexX][bufferIndexY] = this.entity[i];
+
+    if(entity.isoY%widthOfOneUnitInBuffer === 0 ) {
+      let bufferIndexY = Math.floor(entity.isoY/heightOfOneUnitInBuffer);
+      let bufferIndexX = Math.floor(entity.isoX/widthOfOneUnitInBuffer);
+      
+      this.entity[i].buffer = {x:bufferIndexX, y:bufferIndexY };
+      
       this.buffer[bufferIndexX][bufferIndexY].entities.push(this.entity[i]);
     } else {
-      let bufferIndexY = entity.isoY/25;
-      let bufferIndexX = entity.isoX/50;
-      //this.buffer[bufferIndexX][bufferIndexY] = this.entity[i];
+      let bufferIndexY = Math.floor(entity.isoY/heightOfOneUnitInBuffer);
+      let bufferIndexX = Math.floor(entity.isoX/widthOfOneUnitInBuffer);
+      
+      this.entity[i].buffer = {x:bufferIndexX, y:bufferIndexY };
+      
       this.buffer[bufferIndexX][bufferIndexY].entities.push(this.entity[i]);
     }
   }
-};
-Worldmap.prototype.updateBuffer = function() {
-  
 };
 
 Worldmap.prototype.getEntitiesInXDirection = function(indexX, inputRect) {
@@ -163,13 +182,6 @@ Worldmap.prototype.getEntitiesInYDirection = function(indexY, inputRect) {
       console.log(responseArray);
       console.log('--- end list ---' );
   return responseArray; 
-};
-
-Worldmap.prototype.getEntitiesLeftOfRect = function() {
-  
-};
-Worldmap.prototype.getEntitiesRightOfRect = function() {
-  
 };
 
 Worldmap.prototype.getEntities = function(inputRect, direction) {
@@ -297,15 +309,71 @@ Worldmap.prototype.isoToWorld = function(isoX, isoY) {
   }
 }
 Worldmap.prototype.sortEntities = function(){
-    console.log(`Sorting ${this.entity.length} entities...`);
+    //console.log(`Sorting ${this.entity.length} entities...`);
     this.entity.sort(function(a,b){
         let aBounds = a.components.position.rect;
         let bBounds = b.components.position.rect;
         return (aBounds.y + aBounds.height) - (bBounds.y + bBounds.height);
     });
 };
+
+/* Library controls */
+const library = {
+    books: {},
+    subscribe: function() {
+        this.add.apply(this,arguments); 
+    },
+    add: function() { 
+        
+        for(let i=0; i<arguments.length;i++) {
+            if(typeof arguments[i] === 'object') {
+                for(let prop in arguments[i]) {
+                    this.books[prop] = arguments[i][prop];
+                }
+            }
+            if(typeof arguments[i] === 'string') {
+                this.books[arguments[i]] = arguments[i + 1];
+                continue;
+            }
+        }
+    },
+    unsubscribe: function(name) {
+        if(this.books[name]) delete this.books[name];
+    },
+    remove: function(name) { this.unsubscribe(name); },
+    get: function(name) {
+      return ref(this.books, name);
+    }
+};
+
+function ref(obj, str) {
+    return str.split(".").reduce(function(o, x) { return o[x] }, obj);
+}
+
+library.add(tiles
+);
+
+/* Entity controls */
+
+// worldmap.create.tile(100,100, "grass");
+
+Worldmap.prototype.create = function() {
+  console.log(this.tileSize);
+};
+
+Worldmap.prototype.create = {
+  tile: function() {
+    console.log(Worldmap.tileSize);
+  }
+};
+
 /* Initialization */
 Worldmap.prototype.randomMap = function() {
+  
+  
+  
+  console.log(Worldmap.tileSize);
+  
   let x,y, start = new Date;
   for(x=0;x<this.size;x++) {
     this.map[x] = [];
@@ -313,13 +381,86 @@ Worldmap.prototype.randomMap = function() {
       let newEntity = Entity(),
           iso       = this.worldToIso(x,y);
       newEntity._id = `isoX: ${iso.isoX}, isoY: ${iso.isoY}`;
+      
+      let type = Math.round(Math.random()*3+1);
+      let graph = {}, meta = {};
+      
+      switch(Math.round(Math.random()*3+1)) {
+        case 0:
+          
+          // In de nieuwe situatie wordt dit dan:
+          // this.create.tile(x,y,"grass");
+          
+          graph = {
+            type: "spritesheet",
+            image: {
+              "idle": {
+                src:"./images/worldmap/nature/land_spritesheet_idle_400x100.png",
+                width: 100, height: 100,
+                xpos: 0, ypos: 0
+              }
+            }
+          };
+          meta = {
+            name: "grass"
+          };
+          break;
+        case 1:
+          graph = {
+            type: "spritesheet",
+            image: {
+              "idle": {
+                src:"./images/worldmap/nature/land_spritesheet_idle_400x100.png",
+                width: 100, height: 100,
+                xpos: 200, ypos: 0
+              }
+            }
+          };
+          meta = {
+            name: "dense forest"
+          };
+          break;
+        case 2:
+          graph = {
+            type: "spritesheet",
+            image: {
+              "idle": {
+                src:"./images/worldmap/nature/land_spritesheet_idle_400x100.png",
+                width: 100, height: 100,
+                xpos: 300, ypos: 0
+              }
+            }
+          };
+          meta = {
+            name: "forest"
+          };
+          break;
+        default:
+          graph = {
+            type: "animation",
+            image: {
+              "idle": {
+                src:"./images/worldmap/nature/water_idle_100x100.png",
+                width: 100, height: 100,
+                xpos: 0,ypos: 0
+              }
+            }
+          };
+          meta = {
+            name: "water"
+          };
+          break;
+      }
+      
+      
       Entity.addComponents(newEntity, [
         Position({
             worldX: x, worldY: y, 
             isoX: iso.isoX, isoY: iso.isoY, 
             width:this.tileSize.width, height: this.tileSize.height  
         }),
-        Animated
+        Graphic(graph),
+        Meta(meta)
       ]);
       // Place entity in isometric world
       this.map[x][y] = newEntity;
@@ -338,16 +479,30 @@ Worldmap.prototype.randomMap = function() {
       }
     }
   }
+  
+  // Wat losse entities plaatsen:
+  
+  let enemy = new Entity();
+      enemy._id = "enemy1 260, 65";
+  Entity.addComponents(enemy, [
+      Position({
+          worldX: 5, worldY: 5, 
+          isoX: 260, isoY: 65, 
+          width:this.tileSize.width, height: this.tileSize.height  
+      })
+  ]);    
+  Entity.addComponents(enemy, simple_soldier);
+  this.entity.push(enemy);
+  
   // sort entities:
     this.sortEntities();
-    this.clustersInfo();
+    //this.clustersInfo();
   // Create buffer, which holds all entities in isometric projection
       this.initializeBuffer();
-      this.createBuffer();
+      this.updateBuffer();
   // buffer
   
-  
-  
+
  
   
   
@@ -358,7 +513,9 @@ Worldmap.prototype.randomMap = function() {
   let bufferRect = new Rect(105,5,100,100);
   let direction = 'right';
   
-  console.log(this.getEntities(bufferRect, direction)); 
+  //console.log(this.getEntities(bufferRect, direction)); 
+  
+  //console.log(this.entity[6]);
   
   //console.log(this.buffer);
   
